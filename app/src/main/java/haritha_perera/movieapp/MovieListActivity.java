@@ -19,7 +19,7 @@ import retrofit2.Response;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MovieListActivity extends AppCompatActivity {
 
     private static final String API_KEY = "7153abd9";
     private ArrayList<MovieSearch> list;
@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         //Setting Recycler view
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
                     list = response.body().getMovieSearches();
 
-                    adapter = new MovieAdapter(list,MainActivity.this);
+                    adapter = new MovieAdapter(list, MovieListActivity.this);
                     adapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("LOG","res"+response.body());
 
                     swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(MainActivity.this,"No Articles!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieListActivity.this,"No Articles!",Toast.LENGTH_SHORT).show();
                 }
             }
 

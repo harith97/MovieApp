@@ -1,56 +1,67 @@
 package haritha_perera.movieapp.auth;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import haritha_perera.movieapp.MainActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import java.util.Objects;
+
+import haritha_perera.movieapp.MovieListActivity;
 import haritha_perera.movieapp.R;
+import haritha_perera.movieapp.databinding.ActivityLoginBinding;
+import haritha_perera.movieapp.models.LoginUser;
+import haritha_perera.movieapp.viewmodels.LoginActivityViewModel;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity{
 
-    private EditText mEmailField;
-    private EditText mPasswordField;
-    private static final String TAG = "EmailPassword";
+    private LoginActivityViewModel loginActivityViewModel;
+    private ActivityLoginBinding binding;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-
-
-        findViewById(R.id.button3).setOnClickListener(this);
-        findViewById(R.id.textView3).setOnClickListener(this);
-        findViewById(R.id.registerpage2).setOnClickListener(this);
-        mEmailField = findViewById(R.id.editText);
-        mPasswordField = findViewById(R.id.editText2);
-
-
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.button3) {
-            boolean isLoginSuccess = true;
-            if(isLoginSuccess) {
-                startActivity(new Intent(this, MainActivity.class));
+        loginActivityViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
+        binding = DataBindingUtil.setContentView(LoginActivity.this, R.layout.activity_login);
+        binding.setLifecycleOwner(this);
+        binding.setViewmodel(loginActivityViewModel);
+        loginActivityViewModel.getUser().observe(this, new Observer<LoginUser>() {
+            @Override
+            public void onChanged(LoginUser loginUser) {
+                if (TextUtils.isEmpty(Objects.requireNonNull(loginUser).getStrEmailAddress())) {
+                    binding.txtEmailAddress.setError("Enter an E-Mail Address");
+                    binding.txtEmailAddress.requestFocus();
+                }
+                else if (!loginUser.isEmailValid()) {
+                    binding.txtEmailAddress.setError("Enter a Valid E-mail Address");
+                    binding.txtEmailAddress.requestFocus();
+                }
+                else if (TextUtils.isEmpty(Objects.requireNonNull(loginUser).getStrPassword())) {
+                    binding.txtPassword.setError("Enter a Password");
+                    binding.txtPassword.requestFocus();
+                }
+                else if (!loginUser.isPasswordLengthGreaterThan5()) {
+                    binding.txtPassword.setError("Enter at least 6 Digit password");
+                    binding.txtPassword.requestFocus();
+                }
+                else {
+                    startActivity(new Intent(LoginActivity.this, MovieListActivity.class));
+                }
             }
-        }else if (i == R.id.textView3) {
-            //startActivity(new Intent(this, ForgetPasswordActivity.class));
-        } else if (i == R.id.registerpage2) {
-            //startActivity(new Intent(this, RegisterActivity.class));
-        }
+        });
     }
+
+
 
 
 
