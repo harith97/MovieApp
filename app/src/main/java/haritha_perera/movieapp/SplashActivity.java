@@ -3,7 +3,10 @@ package haritha_perera.movieapp;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import haritha_perera.movieapp.auth.LoginActivity;
+import haritha_perera.movieapp.databinding.SplashBinding;
 
 import static java.lang.Thread.sleep;
 
@@ -12,12 +15,13 @@ import static java.lang.Thread.sleep;
  */
 public class SplashActivity extends AppCompatActivity {
 
+    private SplashBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
+        binding = DataBindingUtil.setContentView(SplashActivity.this, R.layout.splash);
 
 
 
